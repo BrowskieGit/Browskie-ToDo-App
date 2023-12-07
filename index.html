@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Nishar To Do List</title>
+    <link
+      rel="icon"
+      href="img/One-Piece-Jolly-Roger.ico"
+      type="image/gif"
+      sizes="16x16"
+    />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        background-color: #f44336;
+        background-image: url("img/purpil snow.gif");
+        transition: all 1s ease 0s;
+        color: white;
+        text-align: center;
+        background-size: cover;
+        position: fixed;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      ul {
+        margin: 0;
+        padding: 0;
+      }
+
+      ul li {
+        cursor: pointer;
+        position: relative;
+        padding: 12px 8px 12px 40px;
+        list-style-type: none;
+        background: #eee;
+        font-size: 18px;
+        transition: 0.2s;
+
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      ul li:nth-child(odd) {
+        background: #f9f9f9;
+      }
+
+      ul li:hover {
+        background: #ddd;
+      }
+
+      ul li.checked {
+        background: #40128b;
+        color: #fff !important;
+        text-decoration: line-through;
+      }
+
+      ul li.checked::before {
+        content: "";
+        position: absolute;
+        border-color: #fff;
+        border-style: solid;
+        border-width: 0 2px 2px 0;
+        top: 15px;
+        left: 16px;
+        transform: rotate(45deg);
+        height: 15px;
+        width: 7px;
+      }
+
+      .close {
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 3px 15px 3px 15px;
+        font-size: 30px;
+      }
+      .edit {
+        position: absolute;
+        right: 50px;
+        top: 0;
+        padding: 8px 15px 7px 15px;
+        font-size: 24px;
+      }
+
+      .close:hover,
+      .edit:hover {
+        background-color: #f44336;
+        color: white;
+      }
+
+      .header:after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+      input {
+        margin: 0;
+        border: none;
+        border-radius: 0;
+        width: 75% !important;
+        float: left;
+        font-size: 18px;
+      }
+      .addBtn,
+      .editBtn {
+        width: 25%;
+        background: #40128b;
+        color: #fff;
+        float: left;
+        text-align: center;
+        font-size: 18px;
+        cursor: pointer;
+        transition: 0.3s;
+        border-radius: 0;
+      }
+
+      .addBtn:hover,
+      .editBtn:hover {
+        background-color: #b799ff;
+      }
+      #myUL li {
+        border-width: 4px;
+        border-style: double;
+        border-image: linear-gradient(#e9cb21, rgb(230 26 11)) 1 1;
+        list-style-image: url("img/BGSW_Signet ul_li.png");
+        list-style-position: inside;
+        margin-bottom: 2%;
+        color: #000;
+        text-align: left;
+      }
+      .borderstyle {
+        border-width: 4px;
+        border-style: double;
+        border-image: linear-gradient(#e9cb21, rgb(230 26 11)) 1 1;
+      }
+      .search_box,
+      #editbox {
+        margin-top: 2%;
+      }
+      #editbox {
+        display: none;
+      }
+      .emojibox img {
+        width: 25%;
+        margin-bottom: 10px;
+      }
+      .btn {
+        background-image: linear-gradient(
+          -225deg,
+          #b01d31 5%,
+          #583b8c 20%,
+          #08579b 40%,
+          #32a1c9 60%,
+          #8cbb67 80%,
+          #338b3a 100%
+        );
+        background-size: auto auto;
+        background-clip: border-box;
+        background-size: 30% auto;
+        color: #fff;
+        background-clip: text;
+        text-fill-color: transparent;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: textclip 2s linear infinite;
+        font-weight: 900;
+        font-size: 2rem;
+      }
+      .tasklistdiv {
+        /*padding: 0% 10% 0% 10%;
+	background: url('img/dark bg.gif');*/
+        min-height: 400px;
+      }
+      .footer h5,
+      .footer h6 {
+        margin-bottom: 0px !important;
+      }
+      .card-body {
+        padding: 0px;
+      }
+      .card-title {
+        text-align: left;
+        font-size: 1.15rem;
+      }
+      ::-webkit-scrollbar {
+        height: 12px;
+        width: 12px;
+        background: #fff;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: royalblue;
+        -webkit-border-radius: 1ex;
+        -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75);
+      }
+
+      ::-webkit-scrollbar-corner {
+        background: #000;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="myDIV"
+      class="container-fluid pt-3 pb-5 px-5 text-white text-center header"
+    >
+      <div class="row">
+        <h1
+          style="
+            font-family: Copperplate, Papyrus, fantasy;
+            padding: 0px !important;
+          "
+          class="p-3 fixxy"
+        >
+          Blue $harkz To Do List:-
+        </h1>
+        <div class="row" style="margin-bottom: 10px">
+          <div class="search_box mt-2 col-sm-12">
+            <input
+              class="p-3 borderstyle"
+              type="text"
+              id="myInput"
+              placeholder="Enter Task Name..."
+            />
+            <span onclick="newElement()" class="addBtn p-3 borderstyle"
+              >&#128077; Add New Task</span
+            >
+          </div>
+          <div id="editbox" class="mt-4 col-sm-12">
+            <input
+              class="p-3 borderstyle"
+              type="text"
+              id="editInput"
+              placeholder="Edit  Task Name..."
+            />
+            <span onclick="" class="editBtn p-3 borderstyle" id="editContent"
+              >&#9997; Edit Task Name</span
+            >
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-7" style="overflow-y: scroll; height: 500px">
+            <div class="tasklistdiv pt-4 pb-4">
+              <ul id="myUL" onclick="statusCounter()">
+                <li class="active">Daily Staus Report</li>
+                <li class="active">Daily Connect - Team meeting</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-sm-5">
+            <div class="row pt-4">
+              <div class="col-sm-6">
+                <div class="card mb-2 borderstyle">
+                  <div class="emojibox text-center m-3">
+                    <div class="row">
+                      <div class="col-sm-12" style="align-self: center">
+                        <img
+                          src="img/happy.png"
+                          class="card-img-top mt-auto"
+                          alt="..."
+                        />
+                        <h5 class="card-title">No. of Tasks Assigned</h5>
+                        <div class="card-body">
+                          <a href="#" class="btn" id="taskCount">2</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="card mb-2 borderstyle">
+                  <div class="emojibox text-center m-3">
+                    <div class="row">
+                      <div class="col-sm-12" style="align-self: center">
+                        <img
+                          src="img/Very happy.png"
+                          class="card-img-top mt-auto"
+                          alt="..."
+                        />
+                        <h5 class="card-title">No. of Tasks Completed</h5>
+                        <div class="card-body">
+                          <a href="#" class="btn" id="taskfinished">0</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="card mb-2 borderstyle">
+                  <div class="emojibox text-center m-3">
+                    <div class="row">
+                      <div class="col-sm-12" style="align-self: center">
+                        <img
+                          src="img/sad.png"
+                          class="card-img-top mt-auto"
+                          alt="..."
+                        />
+                        <h5 class="card-title">No. of Tasks Pending</h5>
+                        <div class="card-body">
+                          <a href="#" class="btn" id="taskRemaining">0</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="card mb-2 borderstyle">
+                  <div class="emojibox text-center m-3">
+                    <div class="row">
+                      <div class="col-sm-12" style="align-self: center">
+                        <img
+                          src="../gif emojis/Smile giphy.gif"
+                          class="card-img-top mt-auto"
+                          alt="..."
+                        />
+                        <h5 class="card-title">Tasks Completion Ratio</h5>
+                        <div class="card-body">
+                          <a href="#" class="btn" id="taskcompletion">0</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="footer">
+              <h5 class="pt-3">Thanks for visiting!</h5>
+              <h6 class="p-3 text-end">
+                ©<span id="jsYear"></span>
+                <span style="background: royalblue">BlueSharkz</span>
+              </h6>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Year format show javascript
+      const d = new Date();
+      let year = d.getFullYear();
+      document.getElementById("jsYear").innerHTML = year;
+
+      // Create a "close" button and append it to each list item
+      var myNodelist = document.getElementsByTagName("LI");
+      var i;
+      for (i = 0; i < myNodelist.length; i++) {
+        var span = document.createElement("SPAN");
+        var txt = document.createTextNode("\u2718");
+        var span1 = document.createElement("SPAN");
+        var txt1 = document.createTextNode("\u270E");
+        span.className = "close";
+        span1.className = "edit";
+        span1.id = "btn" + i;
+        span.appendChild(txt);
+        span1.appendChild(txt1);
+        myNodelist[i].appendChild(span);
+        myNodelist[i].appendChild(span1);
+        myNodelist[i].setAttribute("id", "li" + i);
+      }
+
+      // Click on a close button to hide the current list item
+      var close = document.getElementsByClassName("close");
+      var i;
+      for (i = 0; i < close.length; i++) {
+        close[i].onclick = function () {
+          var div = this.parentElement;
+          div.style.display = "none";
+          div.className = "closedone";
+        };
+      }
+
+      // Add a "checked" symbol when clicking on a list item
+      var list = document.querySelector("ul");
+      list.addEventListener(
+        "click",
+        function (ev) {
+          if (ev.target.tagName === "LI") {
+            ev.target.classList.toggle("checked");
+          }
+        },
+        false
+      );
+
+      // Create a new list item when clicking on the "Add" button
+      var qq = 0;
+      function newElement() {
+        var li = document.createElement("li");
+        var inputValue = document.getElementById("myInput").value;
+        var t = document.createTextNode(inputValue);
+        li.appendChild(t);
+        li.className = "active";
+        if (inputValue === "") {
+          alert("You must write something!");
+        } else {
+          document.getElementById("myUL").appendChild(li);
+        }
+        document.getElementById("myInput").value = "";
+        var span = document.createElement("SPAN");
+        var txt = document.createTextNode("\u2718");
+        var span1 = document.createElement("SPAN");
+        var txt1 = document.createTextNode("\u270E");
+        span.className = "close";
+        span1.className = "edit";
+        span1.id = "Newbtn" + qq;
+        span.appendChild(txt);
+        span1.appendChild(txt1);
+        li.appendChild(span);
+        li.appendChild(span1);
+        li.setAttribute("id", "Newli" + qq);
+        qq = qq + 1;
+        for (i = 0; i < close.length; i++) {
+          close[i].onclick = function () {
+            var div = this.parentElement;
+            div.style.display = "none";
+            div.className = "closedone";
+          };
+        }
+        var edit1 = document.getElementsByClassName("edit");
+        for (var j = 0; j < edit1.length; j++) {
+          edit1[j].onclick = function (e) {
+            var editbox = document.getElementById("editbox");
+            editbox.style.display = "block";
+            //alert(e.target.parentNode.id);
+            var finder = e.target.parentNode.id;
+            var edittext = document.getElementById("editInput");
+            edittext.value = document.getElementById(finder).innerHTML;
+            var change = document.getElementById("editContent");
+            change.onclick = function () {
+              document.getElementById(finder).innerHTML = edittext.value;
+              editbox.style.display = "none";
+            };
+          };
+        }
+      }
+
+      // Edit button show function
+      var edit = document.getElementsByClassName("edit");
+      for (var j = 0; j < edit.length; j++) {
+        edit[j].onclick = function (e) {
+          var editbox = document.getElementById("editbox");
+          editbox.style.display = "block";
+          //alert(e.target.parentNode.id);
+          var finder = e.target.parentNode.id;
+          var edittext = document.getElementById("editInput");
+          edittext.value = document.getElementById(finder).innerHTML;
+
+          var change = document.getElementById("editContent");
+          change.onclick = function () {
+            document.getElementById(finder).innerHTML = edittext.value;
+            editbox.style.display = "none";
+          };
+        };
+      }
+
+      // Load this msg before page refresh or before window close
+      window.onbeforeunload = function () {
+        return "Dude, Are you sure you want to leave? Think of the kittens!";
+      };
+
+      function statusCounter() {
+        var taskcounter = document.getElementsByClassName("active").length;
+        var taskCompleted = document.getElementsByClassName("checked").length;
+        var taskhidden = document.getElementsByClassName("closedone").length;
+        var taskPending = taskcounter - taskCompleted;
+        var taskcompletionrate;
+        if (taskcounter <= 0) {
+          taskcompletionrate = 0;
+        } else {
+          taskcompletionrate = Math.round((taskCompleted / taskcounter) * 100);
+        }
+        document.getElementById("taskCount").innerHTML = taskcounter;
+        document.getElementById("taskfinished").innerHTML = taskCompleted;
+        document.getElementById("taskRemaining").innerHTML = taskPending;
+        document.getElementById("taskcompletion").innerHTML =
+          taskcompletionrate + "%";
+      }
+      setInterval(statusCounter, 1000);
+
+      var imageHead = document.getElementsByTagName("body")[0];
+      var counter = 0;
+      function changeBg() {
+        var images = [
+          "img/todolist_bg.png",
+          "img/todolist_bg2.jpg",
+          "img/purpil snow.gif",
+          "img/gradient_2.png",
+          "img/gradient.png",
+          "img/watercolor.jpg",
+          "img/snow_flow.gif",
+          "img/BGSW_New_Background.png",
+          "img/dark bg.gif",
+        ];
+        imageHead.style.backgroundImage = "url(" + images[counter] + ")";
+        counter = counter + 1;
+        if (counter == images.length) {
+          counter = 0;
+        }
+      }
+      setInterval(changeBg, 5000);
+    </script>
+  </body>
+</html>
